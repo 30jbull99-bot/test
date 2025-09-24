@@ -7,6 +7,7 @@ import { SMAAPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postproce
 import { RoomEnvironment } from 'https://unpkg.com/three@0.160.0/examples/jsm/environments/RoomEnvironment.js';
 import { Sky } from 'https://unpkg.com/three@0.160.0/examples/jsm/objects/Sky.js';
 import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js';
+import { applyNightlyUpkeep, getTimeStage, updateStaminaAndHealth } from './gameLogic.js';
 
 const canvas = document.getElementById('game');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
@@ -445,12 +446,13 @@ function updateLighting(delta) {
   playerState.timeOfDay = (playerState.timeOfDay + delta * 0.01) % 1;
   if (playerState.timeOfDay < lastTimeOfDay) {
     playerState.day += 1;
-    if (playerState.food > 0) {
-      playerState.food -= 1;
-      playerState.health = Math.min(playerState.maxHealth, playerState.health + 20);
-    } else {
-      playerState.health = Math.max(0, playerState.health - 15);
-    }
+    const nightlyResult = applyNightlyUpkeep({
+      health: playerState.health,
+      maxHealth: playerState.maxHealth,
+      food: playerState.food,
+    });
+    playerState.health = nightlyResult.health;
+    playerState.food = nightlyResult.food;
   }
   lastTimeOfDay = playerState.timeOfDay;
 
@@ -479,9 +481,7 @@ function updateHUD() {
   hud.stamina.textContent = Math.round(playerState.stamina).toString();
   hud.food.textContent = playerState.food.toString();
   hud.day.textContent = playerState.day.toString();
-  const stages = ['Night', 'Dawn', 'Morning', 'Noon', 'Afternoon', 'Dusk'];
-  const stageIndex = Math.floor(playerState.timeOfDay * stages.length) % stages.length;
-  hud.time.textContent = stages[stageIndex];
+  hud.time.textContent = getTimeStage(playerState.timeOfDay);
 }
 
 function updateCamera(delta) {
@@ -503,15 +503,16 @@ function updateCamera(delta) {
 
 function updateStats(delta) {
   const moving = Math.abs(playerBody.velocity.x) + Math.abs(playerBody.velocity.z) > 0.2;
-  if (moving) {
-    playerState.stamina = Math.max(0, playerState.stamina - delta * 10);
-  } else {
-    playerState.stamina = Math.min(playerState.maxStamina, playerState.stamina + delta * 18);
-  }
-
-  if (playerState.stamina <= 0) {
-    playerState.health = Math.max(0, playerState.health - delta * 4);
-  }
+  const statResult = updateStaminaAndHealth(
+    {
+      stamina: playerState.stamina,
+      maxStamina: playerState.maxStamina,
+      health: playerState.health,
+    },
+    { moving, delta }
+  );
+  playerState.stamina = statResult.stamina;
+  playerState.health = statResult.health;
 
   if (playerState.health <= 0) {
     hud.tooltip.textContent = 'You fell... click to restart';

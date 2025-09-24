@@ -29,3 +29,11 @@ Visit <http://localhost:8000> (or the port you chose) to play. Click the game wi
 - **Shift** to expend stamina on a forward dash.
 
 Collect crystals to stockpile food for nightly upkeep, avoid wraiths, and use crates as improvised shields.
+
+## Testing
+
+Key survival rules are covered by lightweight Node tests. Run them with:
+
+```bash
+node --test test/gameLogic.test.mjs
+```
