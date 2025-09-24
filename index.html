@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minimal 3D Survival</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div id="hud">
+      <div class="stat">❤️ Health: <span id="health">120</span></div>
+      <div class="stat">⚡ Stamina: <span id="energy">120</span></div>
+      <div class="stat">🌾 Food: <span id="food">0</span></div>
+      <div class="stat">Day <span id="day">1</span> — <span id="time">Morning</span></div>
+    </div>
+    <div id="tooltip">Click to capture the mouse • WASD + mouse to move • Space to jump • Shift to dash</div>
+    <canvas id="game"></canvas>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

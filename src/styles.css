@@ -1,0 +1,83 @@
+:root {
+  color-scheme: dark;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body,
+html {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #101321, #04050a 70%);
+  color: #f5f9ff;
+}
+
+#game {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  background: radial-gradient(circle at center, #202430, #06080f);
+}
+
+#hud {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: rgba(10, 12, 20, 0.65);
+  backdrop-filter: blur(6px);
+  color: #f5f9ff;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.stat {
+  white-space: nowrap;
+}
+
+#tooltip {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.65rem 1.6rem;
+  background: rgba(8, 10, 18, 0.75);
+  border: 1px solid rgba(120, 150, 255, 0.25);
+  border-radius: 999px;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(235, 241, 255, 0.92);
+  backdrop-filter: blur(10px);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 9;
+}
+
+@media (max-width: 600px) {
+  #hud {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    transform: none;
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+    border-radius: 1rem;
+  }
+
+  #tooltip {
+    bottom: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    text-align: center;
+    width: calc(100% - 2rem);
+  }
+}
